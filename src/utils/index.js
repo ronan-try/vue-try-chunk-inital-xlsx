@@ -5,7 +5,6 @@ export const excelToJson = () => {
     return XLSX + 'excelToJson';
 }
 
-
 export const test = () => {
     console.warn('@/utils/index.test is used')
     return 'test'
