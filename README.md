@@ -18,14 +18,18 @@ export const test = () => {
     return 'test'
 }
 ```
-## Try000 没有使用任何`@/utils/index.js`
+
+
+
+### Try000 没有使用任何`@/utils/index.js`
 显然：有`chunk: inital`中的`vue, vue-router, core-js`
 
 截图：
 ![try000](./log_imgs/000.png)
 
 
-## Try010 仅`Home.vue` 使用`test()`
+
+### Try010 仅`Home.vue` 使用`test()`
 代码：`Home.vue`
 ```js
 import { test } from '../utils/index.js'
@@ -42,7 +46,9 @@ export default {
 截图：
 ![try010](./log_imgs/010.png)
 
-## Try020 仅`About.vue` 使用`test()`
+
+
+### Try020 仅`About.vue` 使用`test()`
 代码：`About.vue`
 ```js
 import { test } from '../utils/index.js'
@@ -60,7 +66,8 @@ export default {
 ![try010](./log_imgs/020.png)
 
 
-## 通过以上3个Try可以推断出一下几点
+
+## 通过以上3个Try可以证实/推断出一下几点
 1. `chunk: inital`阶段涉及的`node_modules`的文件库会被放到`chunk-vendors.js`中。 在第2点中做解释。
 2. `Home.vue`发生在`chunk: inital`阶段，因为`router`中`Home.vue`直接引用的，而`About.vue`是动态引用的。
 代码：
@@ -91,8 +98,11 @@ const routes = [
 4. 在没有发生`minChunks:2`时，跟随最先的component 一起bundle为chunk。
 将home.vue 和 about.vue 都使用test函数，xlsx应该会 会pack到chunk-vendors.js中（实验成功）。
 
+
+
 ## Try Target 上面总结中的第3点，为啥没有使用到excelToJson 还会被打包呢？因为包含了esm和cmd？？？
 to do
+
 
 
 ### Customize configuration
