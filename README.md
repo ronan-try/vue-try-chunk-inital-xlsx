@@ -1,35 +1,40 @@
 # vue-try-chunk-inital-xlsx
 
-## Target
-实验：在@/utils/index 中存在一个自封装的xlsx函数，一个test纯esm函数。HelloWorld.vue引入test(), 为何xlsx会被bundle到vendors中去
+## 🙄 Target 
+环境：vue2、webpack4
 
-@/utils/index.js
+实验：在@/utils/index 中存在1个自封装的xlsx函数 + 2个test纯esm函数。HelloWorld.vue引入test(), 为何xlsx会被bundle到vendors中去
+
+
+代码：@/utils/index.js
 ```js
 import * as XLSX from 'xlsx'
 
 export const excelToJson = () => {
     console.warn('@/utils/index.excelToJson is used')
-    return XLSX
+    return XLSX + 'excelToJson';
 }
-
 
 export const test = () => {
     console.warn('@/utils/index.test is used')
     return 'test'
 }
+
+export const test2 = () => {
+    console.warn('@/utils/index.test2 is used')
+    return 'test2'
+}
 ```
 
 
-
-### Try000 没有使用任何`@/utils/index.js`
-显然：有`chunk: inital`中的`vue, vue-router, core-js`
+### Try000 没有使用任何`@/utils/index`函数
+显然：有`chunk: inital`中的`vue, vue-router, core-js`，没有`xlsx`
 
 截图：
 ![try000](./log_imgs/000.png)
 
 
-
-### Try010 仅`Home.vue` 使用`test()`
+### Try010 仅`Home.vue`使用`test()`
 代码：`Home.vue`
 ```js
 import { test } from '../utils/index.js'
@@ -41,14 +46,15 @@ export default {
   },
 }
 ```
-显然：有了`xlsx`。但是并没有使用到`excelToJson()`, 所以猜测 在非纯esm下，打包是不一样的？？？
+😳 显然：有了`xlsx`。但是并没有使用到`excelToJson()`, 
+
+🤔 猜测？？ 因为webpack4使用了变量提升，`@/utils/index`中涉及的code都会被编译进去
 
 截图：
 ![try010](./log_imgs/010.png)
 
 
-
-### Try020 仅`About.vue` 使用`test()`
+### Try020 仅`About.vue`使用`test()`
 代码：`About.vue`
 ```js
 import { test } from '../utils/index.js'
@@ -60,17 +66,19 @@ export default {
   },
 }
 ```
-显然：有了`xlsx`。但是并没有使用到`excelToJson()`, 所以猜测 在非纯esm下，打包是不一样的？？？
+😳 显然：有了`xlsx`。但是并没有使用到`excelToJson()`, 
+
+🤔 猜测？？ 因为webpack4使用了变量提升，`@/utils/index`中涉及的code都会被编译进去
 
 截图：
 ![try010](./log_imgs/020.png)
 
 
-
 ## 通过以上3个Try可以证实/推断出一下几点
-1. `chunk: inital`阶段涉及的`node_modules`的文件库会被放到`chunk-vendors.js`中。 在第2点中做解释。
-2. `Home.vue`发生在`chunk: inital`阶段，因为`router`中`Home.vue`直接引用的，而`About.vue`是动态引用的。
-代码：
+1. [😘 证实][Try000][Try010] `chunk: inital`阶段涉及的`node_modules`的文件库会被放到`chunk-vendors.js`中。 在第2点中做解释。
+
+2. [😘 证实][Try010] `Home.vue`发生在`chunk: inital`阶段，因为`router`中`Home.vue`直接引用的，而`About.vue`是动态引用的，所以`xlsx`packge到`chunk-vendors`
+代码：`router/index`
 ```js
 import Vue from 'vue'
 import VueRouter from 'vue-router'
@@ -94,16 +102,60 @@ const routes = [
   }
 ]
 ```
-3. `@/utils/index.js`会打包cmd文件库， i.e.`xlsx` ？？？
-4. 在没有发生`minChunks:2`时，跟随最先的component 一起bundle为chunk。
-将home.vue 和 about.vue 都使用test函数，xlsx应该会 会pack到chunk-vendors.js中（实验成功）。
+3. [😁 推测] 在没有发生`minChunks:2`时，跟随最先的component 一起bundle为chunk。       
+  [😘 证实]将home.vue 和 about.vue 都使用test函数，xlsx应该会 会pack到chunk-vendors.js中（实验成功，因为home.vue 是直接引用）。
 
+4. 🤔 如何才能发生`minChunks:2`？？
 
+代码：`router/index`
+```js
+import Vue from 'vue'
+import VueRouter from 'vue-router'
 
-## Try Target 上面总结中的第3点，为啥没有使用到excelToJson 还会被打包呢？因为包含了esm和cmd？？？
-to do
+Vue.use(VueRouter)
+
+const routes = [
+  {
+    path: '/',
+    name: 'Home',
+    component: () => import(/* webpackChunkName: "home" */ '../views/Home.vue') // 实验minChunks: 2
+  },
+  {
+    path: '/about',
+    name: 'About',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+  }
+]
+
+const router = new VueRouter({
+  mode: 'history',
+  base: process.env.BASE_URL,
+  routes
+})
+
+export default router
+```
+代码：`home.vue`, `about.vue` 均使用 `test()`
+
+截图：
+![证明minChunks](./log_imgs/minchunk2-xlsx.png)
+
+5. [😘 证实][Try020] 单独使用`@/utils/index`中的`test()`也会将`xlsx`打包进去
+证明上面截图中的`xlsx` + `buffer`:
+- 代码：仅`About.vue`使用`test()`
+- 证明图：
+![证明xlsx](./log_imgs/chunk-xlsx-001.png)
+![证明buffer](./log_imgs/chunk-xlsx-002.png)
+
+## 6. 🤔 猜测？？ 因为webpack4使用了变量提升，@/utils/index中的`cmd` 代码会`all export used`全部打进去了？？
+
 
 
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+自己对上次使用全路径的方法稍微有点迟疑，总觉得不好，看到ant-design也这么搞，挺好，感谢jinru
