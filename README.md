@@ -190,13 +190,13 @@ export default router
 
 ***虽然`excelToJson()`被标记为`unused` + `harmony export`，将被shaking掉，但是`1146 xlsx`不会干掉。***
 
-
-## 🤔 Target1，被证明了猜测？？ 因为webpack4使用了变量提升，@/utils/index中的`cmd` 代码会`all export used`全部打进去了？？
+## Target
+### 🤔 Target1，被证明了猜测？？ 因为webpack4使用了变量提升，@/utils/index中的`cmd` 代码会`all export used`全部打进去了？？
 1. 使用webpack4打包试试
 2. 使用lodash-es试试
 3. 记忆力，webapck4不在解析cmd，直接给他命名空间了。？
 
-## 🤔 Target2. 为何xlsx出现在vendors中
+### 🤔 Target2. 为何xlsx出现在vendors中
 通过Try010、Try020，可知：
 
 如果你在入口文件中有直接引入，则被bundle到vendors中（Try010）
@@ -204,8 +204,5 @@ export default router
 如果你没在入口文件中没有直接引入，则不会（Try020）
 
 
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
 
 自己对上次使用全路径的方法稍微有点迟疑，总觉得不好，看到ant-design也这么搞，挺好，感谢jinru
