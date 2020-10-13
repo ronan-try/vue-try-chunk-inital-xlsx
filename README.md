@@ -96,9 +96,17 @@ splitChunks: {
 },
 ```
 
-### 1. [证实+Try000+Try010] `chunk: inital`阶段涉及的`node_modules`的文件库会被放到`chunk-vendors.js`中。 在第2点中做解释。
+### 🥰 证实1. `chunk: inital`阶段
+实例：Try000 Try010 
 
-### 2. [证实+Try010] `Home.vue`发生在`chunk: inital`阶段，因为`router`中`Home.vue`直接引用的，而`About.vue`是动态引用的，所以`xlsx`bundle到`chunk-vendors`
+`chunk: inital`阶段涉及的`node_modules`的文件库会被放到`chunk-vendors.js`中。 在第2点中做解释。
+
+
+### 🥰🥰 证实2. `chunk: inital`阶段，直接引入 vs 动态引入
+实例：Try010
+
+ `Home.vue`发生在`chunk: inital`阶段，因为`router`中`Home.vue`直接引用的，而`About.vue`是动态引用的，所以`xlsx`bundle到`chunk-vendors`
+
 代码：`router/index`
 ```js
 import Vue from 'vue'
@@ -123,10 +131,13 @@ const routes = [
   }
 ]
 ```
-### 3. [😁 推测] 在没有发生`minChunks:2`时，跟随最先的component 一起bundle为chunk。       
-  [证实] 将home.vue 和 about.vue 都使用test函数，xlsx应该会 会pack到chunk-vendors.js中（实验成功，因为home.vue 是直接引用）。
 
-### 4. 🤔 如何才能发生`minChunks:2`
+
+### 🥰🥰🥰 推测+证实3. 在没有发生`minChunks:2`时，跟随最先的component 一起bundle为chunk。 
+😘 将`home.vue` 和 `about.vue` 都使用`test()`函数，xlsx应该会 会pack到chunk-vendors.js中（实验成功，因为home.vue 是直接引用）。
+
+
+### 🥰🥰🥰🥰 证实4. 如何才能发生`minChunks:2` 🤔 
 共享发生平行关系中
 
 代码：`router/index`
@@ -166,14 +177,19 @@ export default router
 截图：
 ![证明minChunks](./log_imgs/minchunk2-xlsx.png)
 
-### 5. [证实+Try020] 单独使用`@/utils/index`中的`test()`也会将`xlsx`打包进去
+
+## 🥰🥰🥰🥰🥰 证实5. 单独使用`@/utils/index`中的`test()`也会将`xlsx`打包进去
+实例：Try020
+
 证明上面截图中的`xlsx` + `buffer`:
-- 代码：仅`About.vue`使用`test()`
-- 证明图：
+- 代码：             
+仅`About.vue`使用`test()`
+- 证明图：                 
 ![证明xlsx](./log_imgs/chunk-xlsx-001.png)
 ![证明buffer](./log_imgs/chunk-xlsx-002.png)
 
 ***虽然`excelToJson()`被标记为`unused` + `harmony export`，将被shaking掉，但是`1146 xlsx`不会干掉。***
+
 
 ## 6. 🤔 猜测？？ 因为webpack4使用了变量提升，@/utils/index中的`cmd` 代码会`all export used`全部打进去了？？
 1. 使用webpack4打包试试
