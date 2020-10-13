@@ -1,4 +1,4 @@
-// 应该不需要terser，现在自带压缩了
+// optimization.minimize: true，使用的就是TerserPlugin
 // const TerserPlugin = require('terser-webpack-plugin');
 
 const plugins = require('./webpack.plugins');
