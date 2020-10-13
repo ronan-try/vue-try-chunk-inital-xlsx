@@ -1,7 +1,9 @@
 # vue-try-chunk-inital-xlsx
 
-## 🙄 Target: @/utils/index中1个xlsx函数，1个test函数。组件仅用test(),为何xlsx会被bundle？为何xlsx出现在vendors中？
+## 🙄 Target 组件仅用test(),为何xlsx会被bundle？为何xlsx出现在vendors中？
 环境：vue2、webpack4
+
+实验：@/utils/index中1个xlsx函数，1个test函数。组件仅用test(),为何xlsx会被bundle？为何xlsx出现在vendors中？
 
 代码：@/utils/index.js
 ```js
