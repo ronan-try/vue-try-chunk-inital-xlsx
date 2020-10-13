@@ -24,14 +24,14 @@ export const test2 = () => {
 ```
 
 
-### Try000 没有使用任何`@/utils/index`函数
+### 🤔 Try000 没有使用任何`@/utils/index`函数
 显然：有`chunk: inital`中的`vue, vue-router, core-js`，没有`xlsx`
 
 截图：
 ![try000](./log_imgs/000.png)
 
 
-### Try010 仅`Home.vue`使用`test()`
+### 🤔 Try010 仅`Home.vue`使用`test()`
 代码：`Home.vue`
 ```js
 import { test } from '../utils/index.js'
@@ -51,7 +51,7 @@ export default {
 ![try010](./log_imgs/010.png)
 
 
-### Try020 仅`About.vue`使用`test()`
+### 🤔 Try020 仅`About.vue`使用`test()`
 代码：`About.vue`
 ```js
 import { test } from '../utils/index.js'
@@ -71,10 +71,9 @@ export default {
 ![try010](./log_imgs/020.png)
 
 
-## 通过以上3个Try可以证实/推断出一下几点
-1. [😘 证实][Try000][Try010] `chunk: inital`阶段涉及的`node_modules`的文件库会被放到`chunk-vendors.js`中。 在第2点中做解释。
-
-2. [😘 证实][Try010] `Home.vue`发生在`chunk: inital`阶段，因为`router`中`Home.vue`直接引用的，而`About.vue`是动态引用的，所以`xlsx`packge到`chunk-vendors`
+## 😘 通过以上3个Try可以证实/推断出一下几点
+### 1. [😘 证实][Try000][Try010] `chunk: inital`阶段涉及的`node_modules`的文件库会被放到`chunk-vendors.js`中。 在第2点中做解释。
+### 2. [😘 证实][Try010] `Home.vue`发生在`chunk: inital`阶段，因为`router`中`Home.vue`直接引用的，而`About.vue`是动态引用的，所以`xlsx`packge到`chunk-vendors`
 代码：`router/index`
 ```js
 import Vue from 'vue'
@@ -99,10 +98,10 @@ const routes = [
   }
 ]
 ```
-3. [😁 推测] 在没有发生`minChunks:2`时，跟随最先的component 一起bundle为chunk。       
+### 3. [😁 推测] 在没有发生`minChunks:2`时，跟随最先的component 一起bundle为chunk。       
   [😘 证实]将home.vue 和 about.vue 都使用test函数，xlsx应该会 会pack到chunk-vendors.js中（实验成功，因为home.vue 是直接引用）。
 
-4. 🤔 如何才能发生`minChunks:2`
+### 4. 🤔 如何才能发生`minChunks:2`
 
 代码：`router/index`
 ```js
@@ -140,7 +139,7 @@ export default router
 截图：
 ![证明minChunks](./log_imgs/minchunk2-xlsx.png)
 
-5. [😘 证实][Try020] 单独使用`@/utils/index`中的`test()`也会将`xlsx`打包进去
+### 5. [😘 证实][Try020] 单独使用`@/utils/index`中的`test()`也会将`xlsx`打包进去
 证明上面截图中的`xlsx` + `buffer`:
 - 代码：仅`About.vue`使用`test()`
 - 证明图：
