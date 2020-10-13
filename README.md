@@ -210,12 +210,23 @@ export default router
 
 
 
-### 👀👂 自己对上次使用全路径的方法稍微有点迟疑，总觉得不好，看到ant-design也这么搞，挺好，感谢jinru
+## 👀👂 自己对上次使用全路径的方法稍微有点迟疑，总觉得不好，看到ant-design也这么搞，挺好，感谢jinru
+### 😘 ant-design-vue-1.x
+![ant-design-vue-1.x](./lodash_imgs/ant-design-vue-1.x.png)
+
+### 😘 ant-design-vue-2.x
+![ant-design-vue-2.x](./lodash_imgs/ant-design-vue-2.x.png)
+
+### 😘 ant-design-react
+![ant-design-react](./lodash_imgs/ant-design-react.png)
+
+### 🤔🤔 既然已经使用了lodash-es，为啥还在全路径的引入呢？
+
 关于lodash的最佳推荐，有了新感悟，参考实验项目：[webapck4-try-bundle-esm-cmd](https://github.com/ronan-try/webpack4-try-bundle-esm-cmd)
 
-其实[vue-try-chunk-inital-xlsx](https://github.com/ronan-try/vue-try-chunk-inital-xlsx) 与 [webapck4-try-bundle-esm-cmd](https://github.com/ronan-try/webpack4-try-bundle-esm-cmd) 差别不是太大，起初的目的是看vuecli默认的webpack打包效果，而后又模拟了一份配置而已。
+其实[vue-try-chunk-inital-xlsx](https://github.com/ronan-try/vue-try-chunk-inital-xlsx) 与 [webapck4-try-bundle-esm-cmd](https://github.com/ronan-try/webpack4-try-bundle-esm-cmd) 的 webpack config差别不是太大，起初的目的是看vuecli默认的webpack打包效果，而后又模拟了一份配置而已。
 
 
 
 ### 完结 撒花
-💐🌸💮🌹🌺🌻🌼🌷🌱🌲🌳🌴🌵🌾🌿🍀🍁🍂🍃
+💐 🌸 💮 🌹 🌺 🌻 🌼 🌷 🌱 🌲 🌳 🌴 🌵 🌾 🌿 🍀 🍁 🍂 🍃 
