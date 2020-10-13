@@ -1,4 +1,5 @@
-// optimization.minimize: true，使用的就是TerserPlugin
+// optimization.minimize: true，使用的就是TerserPlugin。
+// webpack4默认使用的就是TerserPlugin
 // const TerserPlugin = require('terser-webpack-plugin');
 
 const plugins = require('./webpack.plugins');
