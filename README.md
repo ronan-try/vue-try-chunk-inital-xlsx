@@ -47,7 +47,7 @@ export default {
 ```
 😳 显然：有了`xlsx`。但是并没有使用到`excelToJson()`, 
 
-🤔 猜测：因为webpack4使用了变量提升，`@/utils/index`中涉及的code都会被编译进去
+🤔 猜测：因为webpack4使用了scope-hosing（👺👺👺），`@/utils/index`中涉及的code都会被编译进去
 
 截图：
 ![try010](./log_imgs/010.png)
@@ -67,7 +67,7 @@ export default {
 ```
 😳 显然：有了`xlsx`。但是并没有使用到`excelToJson()`, 
 
-🤔 猜测：因为webpack4使用了变量提升，`@/utils/index`中涉及的code都会被编译进去
+🤔 猜测：因为webpack4使用了scope-hosing（👺👺👺），`@/utils/index`中涉及的code都会被编译进去
 
 截图：
 ![try010](./log_imgs/020.png)
@@ -138,7 +138,7 @@ const routes = [
 
 
 ### 🥰 证实4. 如何才能发生`minChunks:2` 🤔 
-共享发生平行关系中
+共享
 
 代码：`router/index`
 ```js
@@ -191,10 +191,15 @@ export default router
 ***虽然`excelToJson()`被标记为`unused` + `harmony export`，将被shaking掉，但是`1146 xlsx`不会干掉。***
 
 ## Target
-### 🤔 Target1，被证明了猜测？？ 因为webpack4使用了变量提升，@/utils/index中的`cmd` 代码会`all export used`全部打进去了？？
+### 🤔 Target1，被证明了猜测？？ 因为webpack4使用了`scope-hosing`，@/utils/index中的`cmd` 代码会`all export used`全部打进去了？？
 1. 使用webpack4打包试试
 2. 使用lodash-es试试
 3. 记忆力，webapck4不在解析cmd，直接给他命名空间了。？
+
+#### 这样理解才是正果：先bundle ---> 再 Shaking
+- bundle过程中，就是将对应的code进行打包。不管你是esm 还是 umd，所用代码都会bundle。
+- 只不过 esm的相关代码，会通过静态结构分析进行标注`unused harmony`, 便于 shaking
+- webpack4 在针对cmd时，直接给了一个命名空间 all export，而这部分代码是不会被 shaking的
 
 ### 🤔 Target2. 为何xlsx出现在vendors中
 通过Try010、Try020，可知：
@@ -205,4 +210,10 @@ export default router
 
 
 
-自己对上次使用全路径的方法稍微有点迟疑，总觉得不好，看到ant-design也这么搞，挺好，感谢jinru
+### 👀👂 自己对上次使用全路径的方法稍微有点迟疑，总觉得不好，看到ant-design也这么搞，挺好，感谢jinru
+关于lodash的最佳推荐，有了新感悟，参考实验项目：webapck4-try-bundle-esm cmd
+
+
+
+### 完结 撒花
+💐🌸💮🌹🌺🌻🌼🌷🌱🌲🌳🌴🌵🌾🌿🍀🍁🍂🍃
