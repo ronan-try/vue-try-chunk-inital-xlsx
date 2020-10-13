@@ -178,7 +178,7 @@ export default router
 ![证明minChunks](./log_imgs/minchunk2-xlsx.png)
 
 
-## 🥰🥰🥰 证实5. 单独使用`@/utils/index`中的`test()`也会将`xlsx`打包进去
+### 🥰🥰🥰 证实5. 单独使用`@/utils/index`中的`test()`也会将`xlsx`打包进去
 实例：Try020
 
 证明上面截图中的`xlsx` + `buffer`:
@@ -199,7 +199,7 @@ export default router
 #### 这样理解才是正果：先bundle ---> 再 Shaking
 - bundle过程中，就是将对应的code进行打包。不管你是esm 还是 umd，所用代码都会bundle。
 - 只不过 esm的相关代码，会通过静态结构分析进行标注`unused harmony`, 便于 shaking
-- webpack4 在针对cmd时，直接给了一个命名空间 all export，而这部分代码是不会被 shaking的
+- webpack4 在针对cmd时，直接给了一个命名空间,并标识 all export，而这部分代码是不会被 shaking的
 
 ### 🤔 Target2. 为何xlsx出现在vendors中
 通过Try010、Try020，可知：
@@ -211,7 +211,9 @@ export default router
 
 
 ### 👀👂 自己对上次使用全路径的方法稍微有点迟疑，总觉得不好，看到ant-design也这么搞，挺好，感谢jinru
-关于lodash的最佳推荐，有了新感悟，参考实验项目：webapck4-try-bundle-esm cmd
+关于lodash的最佳推荐，有了新感悟，参考实验项目：[webapck4-try-bundle-esm-cmd](https://github.com/ronan-try/webpack4-try-bundle-esm-cmd)
+
+其实[vue-try-chunk-inital-xlsx](https://github.com/ronan-try/vue-try-chunk-inital-xlsx) 与 [webapck4-try-bundle-esm-cmd](https://github.com/ronan-try/webpack4-try-bundle-esm-cmd) 差别不是太大，起初的目的是看vuecli默认的webpack打包效果，而后又模拟了一份配置而已。
 
 
 
