@@ -5,12 +5,12 @@
 </template>
 
 <script>
-// import { test } from '../utils/index.js'
+import { test } from '../utils/index.js'
 
 export default {
   name: 'Home',
   created () {
-    // console.log(test())
+    console.log(test())
   },
 }
 </script>
