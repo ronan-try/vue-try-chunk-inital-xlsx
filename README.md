@@ -137,11 +137,11 @@ const routes = [
 ```
 
 
-### 🥰 推测+证实3. 在没有发生`minChunks:2`时，跟随最先的component 一起bundle为chunk。 
+### 🥰 推测+证实3. 在`initial`阶段，没有发生`minChunks:2`时，跟随最先的component 一起bundle为chunk。 
 将`home.vue` 和 `about.vue` 都使用`test()`函数，xlsx应该会 会pack到chunk-vendors.js中（实验成功，因为home.vue 是直接引用）。
 
 
-### 🥰 证实4. 如何才能发生`minChunks:2` 🤔 
+### 🥰 证实4. 在`initial`阶段，如何才能发生`minChunks:2` 🤔 
 共享
 
 代码：`router/index`
@@ -182,6 +182,9 @@ export default router
 ![证明minChunks](./log_imgs/minchunk2-xlsx.png)
 
 
+📣 📣 Note: 如果将`Home.vue`改成动态引入，就不会发生上面的截图了。
+
+
 ### 🥰🥰🥰 证实5. 单独使用`@/utils/index`中的`test()`也会将`xlsx`打包进去
 实例：Try020
 
@@ -195,18 +198,21 @@ export default router
 ***虽然`excelToJson()`被标记为`unused` + `harmony export`，将被shaking掉，但是`1146 xlsx`不会干掉。***
 
 ## Target 撒花 🌹 🌺 🌻  🌷 🌱 🌲 🌳 🌴 🌵 🌾 🌿 🍀 🍁 🍂 🍃
-### 🤔 Target1，被证明了猜测？？ 因为webpack4使用了`scope-hosing`，@/utils/index中的`cmd` 代码会`all export used`全部打进去了？？
-1. 使用webpack4打包试试
-2. 使用lodash-es试试
-3. 记忆力，webapck4不在解析cmd，直接给他命名空间了。？
 
-#### 这样理解才是正果：先bundle ---> 再 Shaking
-- bundle过程中，就是将对应的code进行打包。不管你是esm 还是 umd，所用代码都会bundle。
-- 只不过 esm的相关代码，会通过静态结构分析进行标注`unused harmony`, 便于 shaking
+### 🤔 Target1，仅调用test(),为何xlsx会被bundle？
+被证明了猜测？？ 因为webpack4使用了`scope-hosing`，@/utils/index中的`cmd` 代码会`all export used`全部打进去了？？
+
+- 起初的思考是：使用`esm下的import` 应该只是引用关系，不会发生`cmd 下的require`拷贝代码现象。
+- 上面所提，是在js 环境下的代码运行机制；并不是webapck的打包机制。
+
+#### 正果：先bundle ---> 再 Shaking（仅对esm有效）
+- bundle过程中，就是将对应的code进行打包。不管你是esm 还是 cmd，所用代码都会bundle。
+- 只不过 esm的相关代码，会通过静态结构分析进行标注`unused harmony`, 被 shaking
 - webpack4 在针对cmd时，直接给了一个命名空间,并标识 all export，而这部分代码是不会被 shaking的
 
-### 🤔 Target2. 为何xlsx出现在vendors中
-通过Try010、Try020，可知：
+
+### 🤔 Target2. 为何xlsx出现在vendors中？
+通过Try010、Try020，可知，关键点`chunks: inital`
 
 如果你在入口文件中有直接引入，则被bundle到vendors中（Try010）
 
