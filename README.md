@@ -137,11 +137,13 @@ const routes = [
 ```
 
 
-### 🥰 推测+证实3. 在`initial`阶段，没有发生`minChunks:2`时，跟随最先的component 一起bundle为chunk。 
+### 🥰 推测+证实3. 准对`common`配置中`minChunks:2`，没有发生`minChunks:2`时，跟随最先的component 一起bundle为chunk。 
 将`home.vue` 和 `about.vue` 都使用`test()`函数，xlsx应该会 会pack到chunk-vendors.js中（实验成功，因为home.vue 是直接引用）。
 
+ps：`common`配置中，对`chunks`配置all async initial 无效
 
-### 🥰 证实4. 在`initial`阶段，如何才能发生`minChunks:2` 🤔 
+
+### 🥰 证实4. 如何才能发生`minChunks:2` 🤔 
 共享
 
 代码：`router/index`
