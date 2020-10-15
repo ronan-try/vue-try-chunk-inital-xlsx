@@ -51,7 +51,7 @@ export default {
 ```
 😳 显然：有了`xlsx`。但是并没有使用到`excelToJson()`, 
 
-🤔 猜测：因为webpack4使用了scope-hosing（👺👺👺），`@/utils/index`中涉及的code都会被编译进去
+~~🤔 猜测：因为webpack4使用了scope-hosing（👺👺👺），`@/utils/index`中涉及的code都会被编译进去~~
 
 截图：
 ![try010](./log_imgs/010.png)
@@ -71,7 +71,7 @@ export default {
 ```
 😳 显然：有了`xlsx`。但是并没有使用到`excelToJson()`, 
 
-🤔 猜测：因为webpack4使用了scope-hosing（👺👺👺），`@/utils/index`中涉及的code都会被编译进去
+~~🤔 猜测：因为webpack4使用了scope-hosing（👺👺👺），`@/utils/index`中涉及的code都会被编译进去~~
 
 截图：
 ![try010](./log_imgs/020.png)
@@ -199,13 +199,14 @@ export default router
 
 ## Target 撒花 🌹 🌺 🌻  🌷 🌱 🌲 🌳 🌴 🌵 🌾 🌿 🍀 🍁 🍂 🍃
 
-### 🤔 Target1，仅调用test(),为何xlsx会被bundle？  哈哈哈哈哈哈哈哈哈，你看它引用路径就知道了，引入的路径是真个文件，不是单个test()方法，逗比
-被证明了猜测？？ 因为webpack4使用了`scope-hosing`，@/utils/index中的`cmd` 代码会`all export used`全部打进去了？？
+### 🤔 Target1，仅调用test(),为何xlsx会被bundle？  
+~~被证明了猜测？？ 因为webpack4使用了`scope-hosing`，@/utils/index中的`cmd` 代码会`all export used`全部打进去了？？~~
 
-- 起初的思考是：使用`esm下的import` 应该只是引用关系，不会发生`cmd 下的require`拷贝代码现象。
-- 上面所提，是在js 环境下的代码运行机制；并不是webapck的打包机制。
+- 起初的思考是：使用`esm下的import` 应该只是引用关系，不会发生`cmd 下的require`拷贝代码现象，所以xlsx不被bundle才对。
+- 其实错了，上面提到的是两个不同的机制，是在js 环境下的代码运行机制；并不是webapck的打包机制。😭😭
 
 #### 正果：先bundle ---> 再 Shaking（仅对esm有效）
+😁 😁看bundle文件的引用路径就知道了，引入的路径是真个文件，不是单个test()方法 😭 😭
 - bundle过程中，就是将对应的code进行打包。不管你是esm 还是 cmd，所用代码都会bundle。
 - 只不过 esm的相关代码，会通过静态结构分析进行标注`unused harmony`, 被 shaking
 - webpack4 在针对cmd时，直接给了一个命名空间,并标识 all export，而这部分代码是不会被 shaking的
