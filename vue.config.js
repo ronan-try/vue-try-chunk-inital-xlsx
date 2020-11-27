@@ -19,10 +19,16 @@ module.exports = {
     mode: 'development',
     optimization: {
       usedExports: true,
-      // minimize: true,
-      // minimizer: [
-      //   new TerserPlugin()
-      // ]
+      splitChunks: {
+        cacheGroups: {
+          xlsx: {
+            name: 'chunk-xlsx',
+            test: /[\\/]node_modules[\\/]xlsx[\\/]/,
+            priority: 20,
+            chunks: 'all'
+          }
+        }
+      },
     },
     plugins,
     module: {
